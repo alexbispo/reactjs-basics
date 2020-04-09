@@ -5,6 +5,9 @@ import "./styles.css";
 
 function App() {
   const [repos, setRepos] = useState([]);
+  const [title, setTitle] = useState("");
+  const [url, setUrl] = useState("");
+  const [techs, setTechs] = useState([]);
 
   function loadRepositories() {
     api.get('repositories')
@@ -17,12 +20,14 @@ function App() {
 
   useEffect(loadRepositories, []);
 
-  async function handleAddRepository() {
+  async function handleSubmit(event) {
+    event.preventDefault();
+
     try {
       const newRepo = {
-        url: "https://github.com/alexbispo/reacjs-basics",
-        title: `Teste ${Date.now()}`,
-        techs: ["Tech 1", "Tech 2"]
+        url,
+        title,
+        techs
       };
 
       const res = await api.post('repositories', newRepo);
@@ -30,6 +35,9 @@ function App() {
       const repo = res.data;
 
       setRepos([...repos, repo]);
+      setUrl("");
+      setTitle("");
+      setTechs([]);
     } catch (error) {
       console.error(error);
       alert('Erro ao tentar adicionar repositório!');
@@ -48,6 +56,21 @@ function App() {
     }
   }
 
+  function handleUrlChange(event) {
+    setUrl(event.target.value);
+  }
+
+  function handleTitleChange(event) {
+    setTitle(event.target.value);
+  }
+
+  function handleTechsChange(event) {
+    const value = event.target.value.split(',');
+    const newTechs = value instanceof Array ? value : [value];
+
+    setTechs(newTechs);
+  }
+
   return (
     <div>
       <ul data-testid="repository-list">
@@ -56,7 +79,7 @@ function App() {
             <li key={repo.id}>
               {repo.title}
 
-              <button onClick={() => handleRemoveRepository(repo.id)}>
+              <button className="button button-danger" onClick={() => handleRemoveRepository(repo.id)}>
                 Remover
               </button>
             </li>
@@ -64,7 +87,22 @@ function App() {
         })}
       </ul>
 
-      <button onClick={handleAddRepository}>Adicionar</button>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Title:
+          <input type="text" value={title} onChange={handleTitleChange} />
+        </label>
+        <label>
+          Url:
+          <input type="text" value={url} onChange={handleUrlChange} />
+        </label>
+        <label>
+          Techs:
+          <input type="text" value={techs} onChange={handleTechsChange} />
+        </label>
+
+        <input type="submit" value="Adicionar"  className="button"/>
+      </form>
     </div>
   );
 }

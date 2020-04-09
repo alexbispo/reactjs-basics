@@ -22,7 +22,7 @@ div li + li {
   margin-top: 15px;
 }
 
-button {
+.button {
   background: #7159c1;
   color: #fff;
   border: 0;
@@ -33,7 +33,7 @@ button {
   font-size: 14px;
 }
 
-div li button {
+div li .button-danger {
   margin: 0 15px;
   background: #ca4949;
 }
