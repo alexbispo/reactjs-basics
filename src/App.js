@@ -6,7 +6,7 @@ import "./styles.css";
 function App() {
   const [repos, setRepos] = useState([]);
 
-  function loadRepositorios() {
+  function loadRepositories() {
     api.get('repositories')
       .then(res => setRepos(res.data))
       .catch((error) => {
@@ -15,7 +15,7 @@ function App() {
     });
   }
 
-  useEffect(loadRepositorios, []);
+  useEffect(loadRepositories, []);
 
   async function handleAddRepository() {
     try {
